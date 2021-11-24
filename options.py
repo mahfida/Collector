@@ -46,7 +46,7 @@ def handle_pkt(pkt):
         STORAGE_FILE.write("timestamp, srcIP, destIP, protocol, swid,flow_packet_count,packets_in_queue,queue_timedelta,hitter, packet_length\n")
 
     if GRE in pkt:
-        print("got a packet")
+        print("Packet-> src: "+str(pkt[IP][GRE][IP].src)+" dst:"+ str(pkt[IP][GRE][IP].dst)+" proto:"+str(pkt[IP][GRE][IP].proto))
         #pkt.show2()
         #sys.stdout.flush()
         telemetry = str(pkt[IP][GRE][IP].options)
