@@ -51,7 +51,7 @@ def handle_pkt(pkt):
         #sys.stdout.flush()
         telemetry = str(pkt[IP][GRE][IP].options)
         
-        swid = result = re.search('swid=(.*)flow_packet_count', telemetry).group(1)
+        swid = re.search('swid=(.*)flow_packet_count', telemetry).group(1)
         flow_packet_count = re.search('flow_packet_count=(.*)packets_in_queue', telemetry).group(1)
         packets_in_queue = re.search('packets_in_queue=(.*)queue_timedelta', telemetry).group(1)
         queue_timedelta = re.search('queue_timedelta=(.*)hitter', telemetry).group(1)
@@ -60,6 +60,7 @@ def handle_pkt(pkt):
         
         STORAGE_FILE.write(str(int(time.time()))+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
         
+        #print(str(int(time.time()))+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
     # CLOSE STORAGE FILE-----------------------------------
     STORAGE_FILE.close()
 
