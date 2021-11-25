@@ -1,3 +1,1 @@
 timestamp, srcIP, destIP, protocol, swid,flow_packet_count,packets_in_queue,queue_timedelta,hitter, packet_length
-1637773996,192.168.248.169,192.168.248.50,6,1 , 73 ,0 ,196 ,0 ,53480 
-1637773996,192.168.248.169,192.168.248.50,6,1 , 73 ,0 ,196 ,0 ,53480 

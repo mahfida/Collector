@@ -45,7 +45,7 @@ def handle_pkt(pkt):
         STORAGE_FILE= open(DATA_DIRECTORY+"/"+"int_data.csv","w+")
         STORAGE_FILE.write("timestamp, srcIP, destIP, protocol, swid,flow_packet_count,packets_in_queue,queue_timedelta,hitter, packet_length\n")
 
-    if GRE in pkt:
+    if((GRE in pkt) and ('10.208.0.16' not in str(pkt[IP].src) )):
         print("Packet-> src: "+str(pkt[IP][GRE][IP].src)+" dst:"+ str(pkt[IP][GRE][IP].dst)+" proto:"+str(pkt[IP][GRE][IP].proto))
         #pkt.show2()
         #sys.stdout.flush()
