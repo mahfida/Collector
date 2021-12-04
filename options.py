@@ -30,9 +30,10 @@ class IPOption_TELEMETRY(IPOption):
     fields_desc = [ _IPOption_HDR,
                     ByteField("length", 2),
                     BitField("swid", 0,3),
+                    BitField("flowid",0,104),
                     BitField("flow_packet_count",0,16),
-                    BitField("packets_in_queue",0,10),
-                    BitField("queue_timedelta",0,32),
+                    BitField("packets_in_queue",0,8),
+                    BitField("queue_timedelta",0,26),
                     BitField("hitter",0,1),
                     BitField("packet_length",0,18)]
 
@@ -43,24 +44,25 @@ def handle_pkt(pkt):
         STORAGE_FILE =  open(DATA_DIRECTORY+"/"+"int_data.csv","a+")
     else:
         STORAGE_FILE= open(DATA_DIRECTORY+"/"+"int_data.csv","w+")
-        STORAGE_FILE.write("timestamp, srcIP, destIP, protocol, swid,flow_packet_count,packets_in_queue,queue_timedelta,hitter, packet_length\n")
+        STORAGE_FILE.write("EXP, timestamp,flowid, srcIP, destIP, protocol, swid,flow_packet_count,packets_in_queue,queue_timedelta,hitter, packet_length\n")
 
     if((GRE in pkt) and ('10.208.0.16' not in str(pkt[IP].src) )):
-        print("Packet-> src: "+str(pkt[IP][GRE][IP].src)+" dst:"+ str(pkt[IP][GRE][IP].dst)+" proto:"+str(pkt[IP][GRE][IP].proto))
+        #print("Packet-> src: "+str(pkt[IP][GRE][IP].src)+" dst:"+ str(pkt[IP][GRE][IP].dst)+" proto:"+str(pkt[IP][GRE][IP].proto))
         #pkt.show2()
         #sys.stdout.flush()
         telemetry = str(pkt[IP][GRE][IP].options)
         
-        swid = re.search('swid=(.*)flow_packet_count', telemetry).group(1)
+        swid = re.search('swid=(.*)flowid', telemetry).group(1)
+        flowid = re.search('flowid=(.*)flow_packet_count', telemetry).group(1)
         flow_packet_count = re.search('flow_packet_count=(.*)packets_in_queue', telemetry).group(1)
         packets_in_queue = re.search('packets_in_queue=(.*)queue_timedelta', telemetry).group(1)
         queue_timedelta = re.search('queue_timedelta=(.*)hitter', telemetry).group(1)
         hitter = re.search('hitter=(.*)packet_length', telemetry).group(1)
         packet_length = re.search('packet_length=(.*)>', telemetry).group(1)[:-1]
         
-        STORAGE_FILE.write(str(int(time.time()))+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
+        STORAGE_FILE.write(str(sys.argv[1])+","+str(int(time.time()))+","+str(flowid)+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
         
-        #print(str(int(time.time()))+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
+        print(str(sys.argv[1])+","+str(int(time.time()))+","+str(flowid)+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
     # CLOSE STORAGE FILE-----------------------------------
     STORAGE_FILE.close()
 
@@ -69,7 +71,6 @@ def main():
     iface = 'ens3'
     print("sniffing on %s" % iface)
     sys.stdout.flush()
-
     # SNIFF PACKET-----------------------------------------
     sniff(iface = iface, 
         prn = lambda x: handle_pkt(x))
