@@ -62,7 +62,7 @@ def handle_pkt(pkt):
         
         STORAGE_FILE.write(str(sys.argv[1])+","+str(int(time.time()))+","+str(flowid)+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
         
-        print(str(sys.argv[1])+","+str(int(time.time()))+","+str(flowid)+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
+        #print(str(sys.argv[1])+","+str(int(time.time()))+","+str(flowid)+","+str(pkt[IP][GRE][IP].src)+","+str(pkt[IP][GRE][IP].dst)+","+str(pkt[IP][GRE][IP].proto)+","+str(swid)+", "+str(flow_packet_count)+","+str(packets_in_queue)+","+str(queue_timedelta)+","+str(hitter)+","+str(packet_length)+"\n")
     # CLOSE STORAGE FILE-----------------------------------
     STORAGE_FILE.close()
 
